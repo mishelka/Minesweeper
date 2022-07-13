@@ -1,5 +1,7 @@
 package minesweeper.core;
 
+import java.util.Random;
+
 /**
  * Field represents playing field and game logic.
  */
@@ -44,6 +46,13 @@ public class Field {
 
         //generate the field content
         generate();
+
+        for(Tile[] row : tiles) {
+            for(Tile t : row) {
+                System.out.print(t);
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -75,14 +84,36 @@ public class Field {
      * @param column column number
      */
     public void markTile(int row, int column) {
-        throw new UnsupportedOperationException("Method markTile not yet implemented");
+        if(tiles[row][column].getState() == Tile.State.MARKED) {
+            tiles[row][column].setState(Tile.State.CLOSED);
+        } else {
+            tiles[row][column].setState(Tile.State.MARKED);
+        }
     }
 
     /**
      * Generates playing field.
      */
     private void generate() {
-        throw new UnsupportedOperationException("Method generate not yet implemented");
+        Random rand = new Random();
+        int counter = 0, r, c;
+
+        while(counter < mineCount) {
+            r = rand.nextInt(rowCount);
+            c = rand.nextInt(columnCount);
+            if(tiles[r][c] == null) {
+                tiles[r][c] = new Mine();
+                counter++;
+            }
+        }
+
+        for (r = 0; r < rowCount; r++) {
+            for (c = 0; c < columnCount; c++) {
+                if(tiles[r][c] == null) {
+                    tiles[r][c] = new Clue(countAdjacentMines(r, c));
+                }
+            }
+        }
     }
 
     /**

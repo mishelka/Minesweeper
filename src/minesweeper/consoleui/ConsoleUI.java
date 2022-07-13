@@ -44,7 +44,9 @@ public class ConsoleUI {
      * Updates user interface - prints the field.
      */
     public void update() {
-        throw new UnsupportedOperationException("Method update not yet implemented");
+        //char c = 6 + 64;
+        //System.out.println(c);
+        //field.getTile(row, col);
     }
     
     /**
