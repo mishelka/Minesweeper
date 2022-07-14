@@ -52,7 +52,6 @@ public class ConsoleUI implements UserInterface {
         do {
             update();
             processInput();
-            throw new UnsupportedOperationException("Resolve the game state - winning or loosing condition.");
         } while (true);
     }
 
@@ -77,8 +76,8 @@ public class ConsoleUI implements UserInterface {
             }
             System.out.println();
         }
-
-        readLine();
+// toto zmazat!!!
+//        readLine();
     }
 
     /**
@@ -86,6 +85,7 @@ public class ConsoleUI implements UserInterface {
      * Reads line from console and does the action on a playing field according to input string.
      */
     private void processInput() {
-        throw new UnsupportedOperationException("Method processInput not yet implemented");
+        String line = readLine();
+        System.out.println(line);
     }
 }
