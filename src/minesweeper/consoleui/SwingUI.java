@@ -1,32 +1,23 @@
 package minesweeper.consoleui;
 
+import minesweeper.core.Field;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Formatter;
-
-import minesweeper.core.Field;
-import minesweeper.core.Tile;
 
 /**
  * Console user interface.
  */
-public class ConsoleUI implements UserInterface {
-    /**
-     * Playing field.
-     */
+public class SwingUI implements UserInterface {
+    /** Playing field. */
     private Field field;
-
-    private String format = "%2s";
-
-    /**
-     * Input reader.
-     */
+    
+    /** Input reader. */
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-
+    
     /**
      * Reads line of text from the reader.
-     *
      * @return line as a string
      */
     private String readLine() {
@@ -36,51 +27,31 @@ public class ConsoleUI implements UserInterface {
             return null;
         }
     }
-
+    
     /**
      * Starts the game.
-     *
      * @param field field of mines and clues
      */
     @Override
     public void newGameStarted(Field field) {
         this.field = field;
-
-        this.format = "%"
-                + (1 + String.valueOf(field.getColumnCount()).length())
-                + "s";
         do {
             update();
             processInput();
             throw new UnsupportedOperationException("Resolve the game state - winning or loosing condition.");
-        } while (true);
+        } while(true);
     }
-
+    
     /**
      * Updates user interface - prints the field.
      */
     @Override
     public void update() {
-        System.out.println("Metoda update():");
-
-        System.out.printf(format, "");
-        for (int c = 0; c < field.getColumnCount(); c++) {
-            System.out.printf(format, c);
-        }
-        System.out.println();
-
-        //vypis riadky so zvislo osou na zaciatku
-        for (int r = 0; r < field.getRowCount(); r++) {
-            System.out.printf(format, (char)(r + 65));
-            for (int c = 0; c < field.getColumnCount(); c++) {
-                System.out.printf(format, field.getTile(r, c));
-            }
-            System.out.println();
-        }
-
-        readLine();
+        //char c = 6 + 64;
+        //System.out.println(c);
+        //field.getTile(row, col);
     }
-
+    
     /**
      * Processes user input.
      * Reads line from console and does the action on a playing field according to input string.

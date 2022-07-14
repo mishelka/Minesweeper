@@ -55,6 +55,22 @@ public class Field {
         }
     }
 
+    public int getRowCount() {
+        return rowCount;
+    }
+
+    public int getColumnCount() {
+        return columnCount;
+    }
+
+    public int getMineCount() {
+        return mineCount;
+    }
+
+    public Tile getTile(int row, int col) {
+        return tiles[row][col];
+    }
+
     /**
      * Opens tile at specified indeces.
      *
