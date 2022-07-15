@@ -3,6 +3,7 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.Formatter;
 
 import minesweeper.core.Field;
@@ -76,8 +77,6 @@ public class ConsoleUI implements UserInterface {
             }
             System.out.println();
         }
-// toto zmazat!!!
-//        readLine();
     }
 
     /**
@@ -85,7 +84,10 @@ public class ConsoleUI implements UserInterface {
      * Reads line from console and does the action on a playing field according to input string.
      */
     private void processInput() {
-        String line = readLine();
-        System.out.println(line);
+        String line = readLine().trim().toUpperCase();
+    }
+
+    private void handleInput(String input) throws WrongFormatException {
+
     }
 }
