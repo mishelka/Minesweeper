@@ -1,5 +1,6 @@
 package minesweeper.core;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -46,13 +47,6 @@ public class Field {
 
         //generate the field content
         generate();
-
-        for(Tile[] row : tiles) {
-            for(Tile t : row) {
-                System.out.print(t);
-            }
-            System.out.println();
-        }
     }
 
     public int getRowCount() {
@@ -81,6 +75,11 @@ public class Field {
         Tile tile = tiles[row][column];
         if (tile.getState() == Tile.State.CLOSED) {
             tile.setState(Tile.State.OPEN);
+            if(tile instanceof Clue
+                && ((Clue)tile).getValue() == 0) {
+                getOpenAdjacentTiles(row, column);
+            }
+
             if (tile instanceof Mine) {
                 state = GameState.FAILED;
                 return;
@@ -89,6 +88,20 @@ public class Field {
             if (isSolved()) {
                 state = GameState.SOLVED;
                 return;
+            }
+        }
+    }
+
+    private void getOpenAdjacentTiles(int row, int column) {
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            int actRow = row + rowOffset;
+            if (actRow >= 0 && actRow < rowCount) {
+                for (int columnOffset = -1; columnOffset <= 1; columnOffset++) {
+                    int actColumn = column + columnOffset;
+                    if (actColumn >= 0 && actColumn < columnCount) {
+                        openTile(actRow, actColumn);
+                    }
+                }
             }
         }
     }
@@ -105,6 +118,25 @@ public class Field {
         } else {
             tiles[row][column].setState(Tile.State.MARKED);
         }
+    }
+
+    public int getRemainingMineCount() {
+        return getMineCount() - this.getNumberOf(Tile.State.MARKED);
+    }
+
+    private int getNumberOf(Tile.State state) {
+        int count = 0;
+        for (int r = 0; r < rowCount; r++) {
+//            count += Arrays.asList(tiles[r])
+//                    .stream()
+//                    .filter((Tile t) -> t.getState() == state)
+//                    .count();
+            for(Tile t : tiles[r]) {
+                if(t.getState() == state)
+                    count++;
+            }
+        }
+        return count;
     }
 
     /**
@@ -137,10 +169,10 @@ public class Field {
      *
      * @return true if game is solved, false otherwise
      */
-    private boolean isSolved() {
-        throw new UnsupportedOperationException("Method isSolved not yet implemented");
+    public boolean isSolved() {
+        return (rowCount * columnCount) - mineCount
+                == getNumberOf(Tile.State.OPEN);
     }
-
     /**
      * Returns number of adjacent mines for a tile at specified position in the field.
      *
@@ -165,5 +197,9 @@ public class Field {
         }
 
         return count;
+    }
+
+    public GameState getState() {
+        return state;
     }
 }
