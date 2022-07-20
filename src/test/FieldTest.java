@@ -1,9 +1,12 @@
 package test;
 
 import minesweeper.core.Field;
+import minesweeper.core.GameState;
 import minesweeper.core.Mine;
 import java.util.Random;
 
+import minesweeper.core.Tile;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,9 +19,6 @@ public class FieldTest {
     private int columnCount;
     private int minesCount;
 
-    public FieldTest() {
-    }
-
     @BeforeEach
     public void initTests() {
         rowCount = randomGenerator.nextInt(10) + 5;
@@ -29,7 +29,10 @@ public class FieldTest {
 
     @Test
     public void checkFieldInitialization() {
-
+        assertEquals(rowCount, field.getRowCount());
+        assertEquals(columnCount, field.getColumnCount());
+        assertEquals(minesCount, field.getMineCount());
+        assertEquals(GameState.PLAYING, field.getState());
     }
 
     @Test
@@ -47,18 +50,33 @@ public class FieldTest {
     }
 
     @Test
-    public void fieldWithTooManyMines() {
-        Field fieldWithTooManyMines = null;
-        int higherMineCount = rowCount * columnCount + randomGenerator.nextInt(10) + 1;
-        try {
-            fieldWithTooManyMines = new Field(rowCount, columnCount, higherMineCount);
-        } catch (Exception e) {
-            // field with more mines than tiles should not be created - it may fail on exception
-        }
-        assertTrue((fieldWithTooManyMines == null)
-                || (fieldWithTooManyMines.getMineCount()
-                <= (rowCount * columnCount)));
+    public void checkMarkTile() {
+        int row = 5, col = 5;
+        assertEquals(Tile.State.CLOSED, field.getTile(row, col).getState());
+        field.markTile(row, col);
+        assertEquals(Tile.State.MARKED, field.getTile(row, col).getState());
+        field.markTile(row, col);
+        assertEquals(Tile.State.CLOSED, field.getTile(row, col).getState());
+        field.openTile(row, col);
+        assertEquals(Tile.State.OPEN, field.getTile(row, col).getState());
+        field.markTile(row, col);
+        assertEquals(Tile.State.OPEN, field.getTile(row, col).getState());
     }
+
+
+//    @Test
+//    public void fieldWithTooManyMines() {
+//        Field fieldWithTooManyMines = null;
+//        int higherMineCount = rowCount * columnCount + randomGenerator.nextInt(10) + 1;
+//        try {
+//            fieldWithTooManyMines = new Field(rowCount, columnCount, higherMineCount);
+//        } catch (Exception e) {
+//            // field with more mines than tiles should not be created - it may fail on exception
+//        }
+//        assertTrue((fieldWithTooManyMines == null)
+//                || (fieldWithTooManyMines.getMineCount()
+//                <= (rowCount * columnCount)));
+//    }
 
     // ... dalsie testy
 }
