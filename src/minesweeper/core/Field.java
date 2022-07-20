@@ -152,6 +152,7 @@ public class Field {
             if(tiles[r][c] == null) {
                 tiles[r][c] = new Mine();
                 counter++;
+                //assert counter > 0;
             }
         }
 
