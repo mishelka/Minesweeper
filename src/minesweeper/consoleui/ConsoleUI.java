@@ -3,10 +3,13 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.SQLOutput;
+import java.text.NumberFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import minesweeper.Minesweeper;
+import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 import minesweeper.core.Tile;
@@ -47,6 +50,24 @@ public class ConsoleUI implements UserInterface {
     @Override
     public void newGameStarted(Field field) {
         this.field = field;
+        System.out.println("Chces si vybrat obtiaznost?");
+        System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) NECHAT DEFAULT");
+        String level = readLine();
+        if(level != null && !level.equals("")) {
+            try {
+                int intLevel = Integer.parseInt(level);
+                Settings s = switch (intLevel) {
+                    case 2 -> Settings.INTERMEDIATE;
+                    case 3 -> Settings.EXPERT;
+                    default -> Settings.BEGINNER;
+                };
+                Minesweeper.getInstance().setSetting(s);
+                this.field = new Field(s.getRowCount(), s.getColumnCount(), s.getMineCount());
+            } catch (NumberFormatException e) {
+                //empty naschval
+            }
+        }
+
         do {
             update();
             processInput();

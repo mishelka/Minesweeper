@@ -5,7 +5,8 @@ import java.util.*;
 /**
  * Player times.
  */
-public class BestTimes implements Iterable<BestTimes.PlayerTime> {
+public class BestTimes
+        implements Iterable<BestTimes.PlayerTime> {
     /** List of best player times. */
     private List<PlayerTime> playerTimes = new ArrayList<PlayerTime>();
 
@@ -43,7 +44,8 @@ public class BestTimes implements Iterable<BestTimes.PlayerTime> {
     /**
      * Player time.
      */
-    public static class PlayerTime implements Comparable<PlayerTime> {
+    public static class PlayerTime
+            implements Comparable<PlayerTime> {
         /** Player name. */
         private final String name;
 

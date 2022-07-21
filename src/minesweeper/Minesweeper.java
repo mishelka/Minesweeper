@@ -18,6 +18,8 @@ public class Minesweeper {
     private long startMillis = System.currentTimeMillis();
     private static Minesweeper instance;
 
+    private Settings setting;
+
     //vracia prave jednu instanciu singletona
     public static Minesweeper getInstance() {
         if(instance == null) {
@@ -32,13 +34,20 @@ public class Minesweeper {
     //singleton - konstruktor musi byt private
     private Minesweeper() {
         instance = this; //singleton
+        setting = Settings.load();
+
         bestTimes.addPlayerTime("Janko", 9);
         bestTimes.addPlayerTime("Janko", 7);
         bestTimes.addPlayerTime("Janko", 3);
         bestTimes.addPlayerTime("Janko", 8);
 
+        Field field = new Field(
+                setting.getRowCount(),
+                setting.getColumnCount(),
+                setting.getMineCount()
+        );
+
         userInterface = new ConsoleUI();
-        Field field = new Field(9, 9, 10);
         userInterface.newGameStarted(field);
     }
 
@@ -56,5 +65,14 @@ public class Minesweeper {
 
     public int getPlayingSeconds() {
         return (int) ((System.currentTimeMillis() - startMillis)/1000);
+    }
+
+    public void setSetting(Settings setting) {
+        this.setting = setting;
+        this.setting.save();
+    }
+
+    public Settings getSetting() {
+        return this.setting;
     }
 }
