@@ -45,10 +45,11 @@ public class Settings implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Settings)) {
+        //inicializacia s priamo v podmienke
+        //pattern variables
+        if (!(obj instanceof Settings s)) {
             return false;
         }
-        Settings s = (Settings) obj;
         return s.rowCount == rowCount
                 && s.columnCount == columnCount
                 && s.mineCount == mineCount;
@@ -79,25 +80,14 @@ public class Settings implements Serializable {
     }
 
     public static Settings load() {
-        ObjectInputStream ois = null;
-
-        try {
-            ois = new ObjectInputStream(
-                    new FileInputStream(SETTING_FILE));
-            Settings s = (Settings) ois.readObject();
-            return s;
+        //try with resources - netreba robit close()
+        try(ObjectInputStream ois = new ObjectInputStream(
+                    new FileInputStream(SETTING_FILE))) {
+            return (Settings) ois.readObject();
         } catch (IOException e) {
             System.out.println("Info: nepodarilo sa otvorit settings subor, pouzivam default BEGINNER");
         } catch (ClassNotFoundException e) {
             System.out.println("Info: nepodarilo sa precitat settings, pouzivam default BEGINNER");
-        } finally {
-            if (ois != null) {
-                try {
-                    ois.close();
-                } catch (IOException e) {
-                    //empty naschval
-                }
-            }
         }
         return BEGINNER;
     }
