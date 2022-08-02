@@ -112,12 +112,17 @@ public class Field {
      * @param column column number
      */
     public void markTile(int row, int column) {
-        if(tiles[row][column].getState() == Tile.State.MARKED) {
-            tiles[row][column].setState(Tile.State.CLOSED);
-        } else {
-            tiles[row][column].setState(Tile.State.MARKED);
+        if (state == GameState.PLAYING) {
+            var tile = getTile(row, column);
+            if (tile.getState() == Tile.State.CLOSED) {
+                tile.setState(Tile.State.MARKED);
+            } else if (tile.getState() == Tile.State.MARKED) {
+                tile.setState(Tile.State.CLOSED);
+            }
         }
     }
+
+
 
     public int getRemainingMineCount() {
         return getMineCount() - this.getNumberOf(Tile.State.MARKED);

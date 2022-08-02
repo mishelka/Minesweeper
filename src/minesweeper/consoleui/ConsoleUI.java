@@ -72,15 +72,16 @@ public class ConsoleUI implements UserInterface {
             update();
             processInput();
 
-            if (field.getState() == GameState.FAILED) {
+            var fieldState=this.field.getState();
+
+            if (fieldState == GameState.FAILED) {
                 System.out.println("Odkryl si minu. Prehral si");
                 break;
             }
-            if (field.getState() == GameState.SOLVED) {
+            if (fieldState == GameState.SOLVED) {
                 System.out.println("Vyhral si");
                 System.out.println(
                     Minesweeper.getInstance().getBestTimes()
-
                 );
                 break;
             }
@@ -125,7 +126,7 @@ public class ConsoleUI implements UserInterface {
      */
     private void processInput() {
         System.out.println("Zadaj svoj vstup.");
-        System.out.println("Ocakavany vstup:  X – ukončenie hry, M - mark, O - open, U - unmark. Napr.: MA1 – označenie dlaždice v riadku A a stĺpci 1");
+        System.out.println("Ocakavany vstup:  X - ukoncenie hry, M - mark, O - open, U - unmark. Napr.: MA1 - oznacenie dlazdice v riadku A a stlpci 1");
         String playerInput = readLine();
 
         if(playerInput.trim().equals('X')) {
@@ -140,7 +141,6 @@ public class ConsoleUI implements UserInterface {
             //e.printStackTrace();
             System.out.println(e.getMessage());
             processInput();
-
         }
     }
 
@@ -205,6 +205,7 @@ public class ConsoleUI implements UserInterface {
         if(OPEN_MARK_PATTERN.matcher(playerInput).matches()) {
             doOperation(matcher1.group(1).charAt(0), matcher1.group(2).charAt(0), Integer.parseInt(matcher1.group(3)));
         }
+
     }
 
 }
