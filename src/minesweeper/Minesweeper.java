@@ -15,7 +15,7 @@ public class Minesweeper {
 
     private BestTimes bestTimes = new BestTimes();
 
-    private long startMillis = System.currentTimeMillis();
+
     private static Minesweeper instance;
 
     private Settings setting;
@@ -63,9 +63,7 @@ public class Minesweeper {
         return bestTimes;
     }
 
-    public int getPlayingSeconds() {
-        return (int) ((System.currentTimeMillis() - startMillis)/1000);
-    }
+
 
     public void setSetting(Settings setting) {
         this.setting = setting;

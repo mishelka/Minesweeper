@@ -32,6 +32,11 @@ public class Field {
     private GameState state = GameState.PLAYING;
 
     /**
+     * time when the game started
+     */
+    private long startMillis;
+
+    /**
      * Constructor.
      *
      * @param rowCount    row count
@@ -167,6 +172,8 @@ public class Field {
                 }
             }
         }
+
+        startMillis = System.currentTimeMillis();
     }
 
     /**
@@ -207,4 +214,16 @@ public class Field {
     public GameState getState() {
         return state;
     }
+
+    public int getPlayTimeInSeconds(){
+        return (int) ((System.currentTimeMillis() - startMillis)/1000);
+    }
+
+
+
+    public int getScore() {
+        return rowCount * columnCount * 10 - getPlayTimeInSeconds();
+    }
+
+
 }

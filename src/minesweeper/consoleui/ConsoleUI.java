@@ -30,6 +30,11 @@ public class ConsoleUI implements UserInterface {
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
     /**
+     * name of the player
+     */
+    private String userName ="";
+
+    /**
      * Reads line of text from the reader.
      *
      * @return line as a string
@@ -49,8 +54,13 @@ public class ConsoleUI implements UserInterface {
      */
     @Override
     public void newGameStarted(Field field) {
+
+        int gameScore=0;
+
         this.field = field;
-        System.out.println("Chces si vybrat obtiaznost?");
+        System.out.println("Zadaj svoje meno:");
+        userName = readLine();
+        System.out.println("Vyber obtiaznost:");
         System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) NECHAT DEFAULT");
         String level = readLine();
         if(level != null && !level.equals("")) {
@@ -75,11 +85,12 @@ public class ConsoleUI implements UserInterface {
             var fieldState=this.field.getState();
 
             if (fieldState == GameState.FAILED) {
-                System.out.println("Odkryl si minu. Prehral si");
+                System.out.println(userName+", odkryl si minu. Prehral si. Tvoje skore je "+gameScore+".");
                 break;
             }
             if (fieldState == GameState.SOLVED) {
-                System.out.println("Vyhral si");
+                gameScore=this.field.getScore();
+                System.out.println(userName+", vyhral si. Tvoje skore je "+gameScore+".");
                 System.out.println(
                     Minesweeper.getInstance().getBestTimes()
                 );
@@ -97,7 +108,7 @@ public class ConsoleUI implements UserInterface {
     public void update() {
         //System.out.println("Metoda update():");
         System.out.printf("Cas hrania: %d%n",
-                Minesweeper.getInstance().getPlayingSeconds()
+                field.getPlayTimeInSeconds()
         );
         System.out.printf("Pocet poli neoznacenych ako mina je %s (pocet min: %s)%n", field.getRemainingMineCount(), field.getMineCount());
 
