@@ -1,29 +1,55 @@
 package minesweeper;
 
+
+import entity.Score;
+import service.ScoreService;
+import service.ScoreServiceJDBC;
+
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Date;
+
 
 public class TestJDBC {
-
     public static void main(String[] args) throws Exception{
+        ScoreService service = new ScoreServiceJDBC();
 
-        try( var connection =DriverManager.getConnection("jdbc:postgresql://localhost/gamestudio","postgres","postgres");
-             var statement = connection.createStatement();
-             var rs = statement.executeQuery("SELECT game, username, points, played_on FROM score WHERE game='minesweeper' ORDER BY points DESC LIMIT 5")
-             )
-        {
-            System.out.println("Pripojenie uspesne.");
+        //service.reset();
 
-            while(rs.next()) {
-                System.out.printf("%s, %s, %d, %s \n", rs.getString(1), rs.getString(2), rs.getInt(3), rs.getTimestamp(4));
-            }
+        service.addScore(new Score("minesweeper","David",456,new Date()));
+
+        var scores = service.getBestScores("minesweeper");
+        System.out.println(scores);
 
 
-        }catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
+
+
     }
+
 }
+
+
+//    public static void main(String[] args) throws Exception{
+//
+//        try( var connection =DriverManager.getConnection("jdbc:postgresql://localhost/gamestudio","postgres","postgres");
+//             var statement = connection.createStatement();
+//             var rs = statement.executeQuery("SELECT game, username, points, played_on FROM score WHERE game='minesweeper' ORDER BY points DESC LIMIT 5")
+//             )
+//        {
+//            System.out.println("Pripojenie uspesne.");
+//
+//            while(rs.next()) {
+//                System.out.printf("%s, %s, %d, %s \n", rs.getString(1), rs.getString(2), rs.getInt(3), rs.getTimestamp(4));
+//            }
+//
+//
+//        }catch (SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
+//}
+
+
 
 //    public static void main(String[] args) throws Exception{
 //
