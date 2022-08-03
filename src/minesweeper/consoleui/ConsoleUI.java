@@ -79,19 +79,19 @@ public class ConsoleUI implements UserInterface {
         }
 
         do {
-            update();
-            processInput();
+                    update();
+                    processInput();
 
-            var fieldState=this.field.getState();
+                    var fieldState=this.field.getState();
 
-            if (fieldState == GameState.FAILED) {
-                System.out.println(userName+", odkryl si minu. Prehral si. Tvoje skore je "+gameScore+".");
-                break;
-            }
-            if (fieldState == GameState.SOLVED) {
-                gameScore=this.field.getScore();
-                System.out.println(userName+", vyhral si. Tvoje skore je "+gameScore+".");
-                System.out.println(
+                    if (fieldState == GameState.FAILED) {
+                        System.out.println(userName+", odkryl si minu. Prehral si. Tvoje skore je "+gameScore+".");
+                        break;
+                    }
+                    if (fieldState == GameState.SOLVED) {
+                        gameScore=this.field.getScore();
+                        System.out.println(userName+", vyhral si. Tvoje skore je "+gameScore+".");
+                        System.out.println(
                     Minesweeper.getInstance().getBestTimes()
                 );
                 break;
