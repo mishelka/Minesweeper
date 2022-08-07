@@ -26,6 +26,7 @@ public class Score implements Serializable {
                 '}';
     }
 
+
     public String getGame() {
         return game;
     }

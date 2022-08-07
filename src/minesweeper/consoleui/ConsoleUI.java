@@ -5,14 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLOutput;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import entity.Score;
 import minesweeper.Minesweeper;
 import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 import minesweeper.core.Tile;
+import service.ScoreService;
+import service.ScoreServiceJDBC;
 
 /**
  * Console user interface.
@@ -27,12 +33,12 @@ public class ConsoleUI implements UserInterface {
     /**
      * Input reader.
      */
-    private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
 
     /**
-     * name of the player
+     * object for accessing the persistent storage of player score
      */
-    private String userName ="";
+    final private ScoreService scoreService = new ScoreServiceJDBC();
 
     /**
      * Reads line of text from the reader.
@@ -59,7 +65,7 @@ public class ConsoleUI implements UserInterface {
 
         this.field = field;
         System.out.println("Zadaj svoje meno:");
-        userName = readLine();
+        String userName = readLine();
         System.out.println("Vyber obtiaznost:");
         System.out.println("(1) BEGINNER, (2) INTERMEDIATE, (3) EXPERT, (ENTER) NECHAT DEFAULT");
         String level = readLine();
@@ -78,6 +84,8 @@ public class ConsoleUI implements UserInterface {
             }
         }
 
+        boolean gameShouldContinue = true;
+
         do {
                     update();
                     processInput();
@@ -85,19 +93,39 @@ public class ConsoleUI implements UserInterface {
                     var fieldState=this.field.getState();
 
                     if (fieldState == GameState.FAILED) {
-                        System.out.println(userName+", odkryl si minu. Prehral si. Tvoje skore je "+gameScore+".");
-                        break;
+                        System.out.println(userName +", odkryl si minu. Prehral si. Tvoje skore je "+gameScore+".");
+                        gameShouldContinue = false;
                     }
                     if (fieldState == GameState.SOLVED) {
                         gameScore=this.field.getScore();
-                        System.out.println(userName+", vyhral si. Tvoje skore je "+gameScore+".");
-                        System.out.println(
-                    Minesweeper.getInstance().getBestTimes()
-                );
-                break;
+                        System.out.println(userName +", vyhral si. Tvoje skore je "+gameScore+".");
+                        gameShouldContinue = false;
             }
-        } while (true);
+        } while (gameShouldContinue);
+
+        try{
+            scoreService.addScore(new Score("minesweeper", userName,gameScore,new Date()));
+        }catch(Exception e){
+            System.out.println("Nepodarilo sa zapisat skore do databazy ("+e.getMessage()+")");
+        }
+
+        printBestScores();
         System.exit(0);
+
+    }
+
+    private void printBestScores() {
+        System.out.println("------------------------------------------------");
+        System.out.println("5 najlepsich skore (hrac/ka, skore, datum):");
+        try{
+            List<Score> bestScores = scoreService.getBestScores("minesweeper");
+            for (Score score : bestScores) {
+                System.out.printf("%s, %d, %tD %n",score.getUsername(),score.getPoints(), score.getPlayedOn());
+            }
+        }catch(Exception e){
+            System.out.println("Nepodarilo sa ziskat skore z databazy ("+e.getMessage()+")");
+        }
+
 
     }
 
@@ -140,7 +168,8 @@ public class ConsoleUI implements UserInterface {
         System.out.println("Ocakavany vstup:  X - ukoncenie hry, M - mark, O - open, U - unmark. Napr.: MA1 - oznacenie dlazdice v riadku A a stlpci 1");
         String playerInput = readLine();
 
-        if(playerInput.trim().equals('X')) {
+
+        if(playerInput.trim().equals("X")) {
             System.out.println("Ukoncujem hru");
             System.exit(0);
         }
@@ -208,7 +237,7 @@ public class ConsoleUI implements UserInterface {
         matcher1.find();
 
         if (!isInputInBorderOfField(matcher1.group(2), matcher1.group(3))) {
-            System.out.println("");
+            System.out.println();
             processInput();
             return;
         }

@@ -5,13 +5,11 @@ import entity.Score;
 import service.ScoreService;
 import service.ScoreServiceJDBC;
 
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Date;
 
 
-public class TestJDBC {
-    public static void main(String[] args) throws Exception{
+public class PlaygroundJDBC {
+    public static void main(String[] args){
         ScoreService service = new ScoreServiceJDBC();
 
         //service.reset();
