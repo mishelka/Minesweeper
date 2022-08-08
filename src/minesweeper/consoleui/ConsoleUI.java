@@ -3,9 +3,6 @@ package minesweeper.consoleui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.SQLOutput;
-import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,7 +10,6 @@ import java.util.regex.Pattern;
 
 import entity.Score;
 import minesweeper.Minesweeper;
-import minesweeper.Settings;
 import minesweeper.core.Field;
 import minesweeper.core.GameState;
 import minesweeper.core.Tile;
@@ -39,6 +35,8 @@ public class ConsoleUI implements UserInterface {
      * object for accessing the persistent storage of player score
      */
     final private ScoreService scoreService = new ScoreServiceJDBC();
+
+    private Settings setting;
 
     /**
      * Reads line of text from the reader.
@@ -77,7 +75,8 @@ public class ConsoleUI implements UserInterface {
                     case 3 -> Settings.EXPERT;
                     default -> Settings.BEGINNER;
                 };
-                Minesweeper.getInstance().setSetting(s);
+                this.setting = s;
+                this.setting.save();
                 this.field = new Field(s.getRowCount(), s.getColumnCount(), s.getMineCount());
             } catch (NumberFormatException e) {
                 //empty naschval
@@ -156,6 +155,21 @@ public class ConsoleUI implements UserInterface {
             System.out.println();
         }
 
+
+    }
+
+    @Override
+    public void play(){
+        setting = Settings.load();
+
+
+        Field field = new Field(
+                setting.getRowCount(),
+                setting.getColumnCount(),
+                setting.getMineCount()
+        );
+
+        newGameStarted(field);
 
     }
 

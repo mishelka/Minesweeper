@@ -1,4 +1,4 @@
-package minesweeper;
+package minesweeper.consoleui;
 
 import java.io.*;
 
